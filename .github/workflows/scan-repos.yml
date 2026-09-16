@@ -1,0 +1,101 @@
+name: Scan repos (github-sync + memory-for-all)
+
+on:
+  schedule:
+    # 05:00 and 17:00 UTC = ~08:00 / ~20:00 Israel time while on DST (IDT, UTC+3).
+    # Israel exits DST in late October — after that these run ~09:00/21:00 local.
+    # GitHub Actions cron is always UTC and does NOT auto-adjust for target-timezone
+    # DST; nudge by 1 hour around end-of-October / end-of-March if you want it
+    # pinned to local wall-clock time year-round.
+    - cron: '0 5,17 * * *'
+  workflow_dispatch: {}   # allows manual "Run workflow" from the Actions tab
+
+permissions:
+  contents: read
+  issues: write   # needed only for the auto-issue-on-failure step below
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout github-sync (self)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 10
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install PyYAML (for YAML validation + scheduler smoke test)
+        run: pip install --quiet PyYAML
+
+      - name: Make scripts executable
+        run: chmod +x scripts/scan_repo_generic.sh scripts/scan_memory_for_all.sh scripts/scan_github_sync.sh
+
+      - name: Scan github-sync (generic)
+        id: scan_self_generic
+        run: bash scripts/scan_repo_generic.sh . "github-sync" | tee /tmp/scan_self_generic.md
+        continue-on-error: true
+
+      - name: Scan github-sync (governance structure)
+        id: scan_self_governance
+        run: bash scripts/scan_github_sync.sh . | tee /tmp/scan_self_governance.md
+        continue-on-error: true
+
+      - name: Clone memory-for-all
+        run: git clone --depth 10 https://github.com/botbikamordehai2-sketch/memory-for-all.git /tmp/memory-for-all
+
+      - name: Scan memory-for-all (generic)
+        id: scan_mfa_generic
+        run: bash scripts/scan_repo_generic.sh /tmp/memory-for-all "memory-for-all" | tee /tmp/scan_mfa_generic.md
+        continue-on-error: true
+
+      - name: Scan memory-for-all (extra checks)
+        id: scan_mfa_extra
+        run: bash scripts/scan_memory_for_all.sh /tmp/memory-for-all | tee /tmp/scan_mfa_extra.md
+        continue-on-error: true
+
+      - name: Write job summary
+        if: always()
+        run: |
+          {
+            echo "# Repo health scan — $(date -u '+%Y-%m-%d %H:%M UTC')"
+            echo
+            cat /tmp/scan_self_generic.md 2>/dev/null
+            echo
+            cat /tmp/scan_self_governance.md 2>/dev/null
+            echo
+            cat /tmp/scan_mfa_generic.md 2>/dev/null
+            echo
+            cat /tmp/scan_mfa_extra.md 2>/dev/null
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Fail the job if any scan found a problem
+        if: steps.scan_self_generic.outcome == 'failure' || steps.scan_self_governance.outcome == 'failure' || steps.scan_mfa_generic.outcome == 'failure' || steps.scan_mfa_extra.outcome == 'failure'
+        run: |
+          echo "One or more scans reported a problem — see the job summary above."
+          exit 1
+
+      - name: Open/update a tracking issue on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const summary = fs.readFileSync(process.env.GITHUB_STEP_SUMMARY, 'utf8').slice(0, 60000);
+            const title = '🩺 Repo health scan failed';
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo, state: 'open', labels: 'repo-health-scan'
+            });
+            const body = `Automated scan run: ${context.runId}\n\n${summary}`;
+            if (issues.length > 0) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo, issue_number: issues[0].number, body
+              });
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner, repo: context.repo.repo, title, body, labels: ['repo-health-scan']
+              });
+            }
