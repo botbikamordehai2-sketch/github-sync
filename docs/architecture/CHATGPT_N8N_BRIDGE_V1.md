@@ -248,3 +248,25 @@ v1 is accepted when:
 - all decisions produce audit events,
 - no secrets appear in logs,
 - no repository writes occur.
+
+## 12. Current implementation status
+
+Implemented in the workflow JSON:
+- fixed target allow-list for `github-sync`,
+- R0 GitHub REST read routing,
+- `repo.inspect`,
+- `repo.read_file`,
+- `repo.list_prs`,
+- `repo.list_issues`,
+- `repo.compare_refs`,
+- `repo.health_summary` metadata path,
+- duplicate `correlation_id` blocking,
+- append-oriented in-workflow audit buffer,
+- R1/R2 blocking,
+- R3 hard blocking.
+
+The workflow intentionally remains `active: false`.
+
+Before activation, configure real webhook authentication and freshness validation. The current JSON must not be exposed publicly as a live endpoint until the authentication gate is configured and tested.
+
+Because the target repository is public, the first R0 GitHub handler uses unauthenticated public GitHub REST reads. A GitHub credential should only be added later if private-repository access or higher API limits are required.
