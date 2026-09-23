@@ -1,0 +1,79 @@
+{
+  "name": "TROS ChatGPT Bridge - Read Only v1",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tros/chatgpt/v1",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $json.body ?? $json;\nconst required = ['version','correlation_id','source','actor','target','action','timestamp'];\nconst missing = required.filter(k => body[k] === undefined || body[k] === null || body[k] === '');\nif (missing.length) { return [{json:{ok:false,status:'blocked',reason:'missing_fields',missing,correlation_id:body.correlation_id ?? null,timestamp:new Date().toISOString()}}]; }\nreturn [{json:{...body,_validated:true}}];"
+      },
+      "id": "normalize",
+      "name": "Normalize + Validate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [240, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $json;\nif (item.ok === false) return [{json:item}];\nconst registry = {\n  'repo.inspect':'R0',\n  'repo.read_file':'R0',\n  'repo.list_prs':'R0',\n  'repo.list_issues':'R0',\n  'repo.compare_refs':'R0',\n  'repo.health_summary':'R0',\n  'repo.create_branch':'R1',\n  'repo.create_draft_file':'R1',\n  'repo.open_draft_pr':'R1',\n  'repo.create_issue':'R1',\n  'repo.update_tracked_file':'R2',\n  'repo.modify_workflow':'R2',\n  'repo.modify_integration_config':'R2',\n  'repo.merge_pr':'R3',\n  'repo.delete_file':'R3',\n  'repo.delete_branch':'R3',\n  'repo.change_permissions':'R3',\n  'repo.change_visibility':'R3',\n  'secrets.write':'R3',\n  'production.deploy':'R3'\n};\nconst risk = registry[item.action];\nif (!risk) return [{json:{ok:false,status:'blocked',reason:'unknown_action',correlation_id:item.correlation_id,timestamp:new Date().toISOString()}}];\nif (risk === 'R3') return [{json:{ok:false,status:'blocked',reason:'prohibited_action',risk_class:risk,correlation_id:item.correlation_id,timestamp:new Date().toISOString()}}];\nif (risk === 'R1' || risk === 'R2') return [{json:{ok:false,status:'blocked',reason:'approval_required',risk_class:risk,correlation_id:item.correlation_id,timestamp:new Date().toISOString()}}];\nreturn [{json:{...item,risk_class:risk,decision:'allowed'}}];"
+      },
+      "id": "policy",
+      "name": "Policy Gate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const x = $json;\nif (x.ok === false) return [{json:x}];\nreturn [{json:{ok:true,correlation_id:x.correlation_id,status:'accepted',action:x.action,risk_class:x.risk_class,approval:'not_required',result:{message:'R0 request accepted by bridge skeleton. Handler not yet connected.'},timestamp:new Date().toISOString()}}];"
+      },
+      "id": "result",
+      "name": "Build Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [760, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [1020, 0]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{"node":"Normalize + Validate","type":"main","index":0}]]
+    },
+    "Normalize + Validate": {
+      "main": [[{"node":"Policy Gate","type":"main","index":0}]]
+    },
+    "Policy Gate": {
+      "main": [[{"node":"Build Response","type":"main","index":0}]]
+    },
+    "Build Response": {
+      "main": [[{"node":"Respond to Webhook","type":"main","index":0}]]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "chatgpt-n8n-bridge-readonly-v1"
+}
