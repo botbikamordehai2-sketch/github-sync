@@ -11,10 +11,12 @@
 
 - מוקד הקורס: בניית סוכן Slack ש"עדיין עונה ב-3 בלילה" — משכפול תבנית Slack Agent ועד פריסת בוט על Vercel ששורד rate limits וכשלי API בלי להשאיר את הצוות "עיוור" (ללא נראות).
 - משך משוער: 6–10 שעות ממוקדות.
-- שלוש חטיבות תוכן עיקריות:
+- ארבעה תחומי למידה שמציג דף הקורס הרשמי:
   1. **Foundation & Architecture** — הקמת sandbox, חיווט Nitro + Bolt, אירועי HTTP מבוססי VercelReceiver, ו-correlation middleware.
-  2. **AI Orchestration & Tools** — system prompts, tools, streaming, retries, ו-graceful degradation באמצעות ה-AI SDK.
-  3. **Deployment & Operations** — פריסה ל-Vercel, צמצום היקף הרשאות (scopes), הוספת structured logs, ובניית runbook נבדק עם SLOs.
+  2. **Interaction Surfaces** — פקודות, קיצורי דרך, חלונות ו־App Home, עם אישור קבלה ומעקב לפי מזהה בקשה.
+  3. **AI Orchestration** — system prompts, כלים, streaming, retries, ו-fallback באמצעות ה-AI SDK.
+  4. **Production Operations** — פריסה ל-Vercel, הרשאות מינימליות, structured logs ו-runbook.
+- בנפרד, דף הקורס מונה שש יחידות: Orientation, Slack Apps, Interaction Surfaces, AI Orchestration & Tools, Deployment & Operations, Course Complete.
 - תוצרי למידה מוצהרים: סוכן Slack שרץ בסביבת עבודה אמיתית (לא רק ערוץ הדגמה) — כולל טיפול בשגיאות ו-retries, structured logs עם correlation IDs, OAuth scopes מינימליים, תזמור AI דרך ה-AI SDK, ו-runbook + SLOs שמאפשרים לאדם אחר לתחזק את המערכת.
 
 ## OBSERVATION — פרשנות/סיכום שלנו
@@ -25,7 +27,7 @@
 
 ## UNSUPPORTED — טרם אומת
 
-- אין בידינו כרגע רשימת שיעורים בודדים בתוך כל אחת משלוש החטיבות — רק שמות החטיבות ותיאור כללי. WebFetch ישיר לדף (וגם ל-`examples.vercel.com`) נחסם ברשת הסביבה הנוכחית.
+- ארבעת תחומי הלמידה ושש יחידות הקורס אומתו מול הדף הרשמי. רשימת כל השיעורים הבודדים ותוכנם עדיין לא אומתו במלואם.
 - לא אומת אם הקורס דורש חשבון Slack workspace אמיתי כדי להשלים את התרגול (סביר, אך לא מאושר מהמקור).
 - **חשוב מבחינת SAFETY_RULES:** קורס זה מלמד חיבור בין Slack ל-Vercel/AI SDK בפועל. כל יישום בפועל של הידע הזה (יצירת אינטגרציה חדשה, טוקנים, OAuth scopes אמיתיים) כפוף לכלל "אין אוטומציות חדשות ללא אישור אנושי" (SAFETY_RULES #2) ו"אין כתיבה חיצונית ללא אישור אנושי" (#1) — זה קורס לימודי בלבד בשלב זה, לא אישור להקמת סוכן Slack חי.
 
