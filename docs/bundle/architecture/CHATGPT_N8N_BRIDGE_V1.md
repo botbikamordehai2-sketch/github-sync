@@ -260,10 +260,12 @@ Implemented in the workflow JSON:
 - `repo.list_issues`,
 - `repo.compare_refs`,
 - `repo.health_summary` metadata path,
-- duplicate `correlation_id` blocking,
+- best-effort duplicate `correlation_id` blocking after successful completion,
 - append-oriented in-workflow audit buffer,
 - R1/R2 blocking,
 - R3 hard blocking.
+
+The workflow-static-data duplicate check is not atomic across concurrent executions and the in-workflow audit buffer is not durable. Acceptance criteria for reliable idempotency and audit still require persistent storage or serialized execution and separate tests.
 
 The workflow intentionally remains `active: false`.
 
