@@ -1,6 +1,6 @@
 # cycle-lab-2409
 
-פתק קצר בלבד. לא שינוי סטטוס רשמי. מקור־על נשאר `STATUS.md`.
+פתק קצר בלבד. לא שינוי סטטוס רשמי. מקורות־העל לסטטוס הם `STATUS.md` ו־`PROJECT_INDEX.md`.
 
 תאריך: 2026-09-24 04:10 Asia/Jerusalem
 מקור: n8n Cloud, workflow Cycle Lab 2409, execution ID#13
