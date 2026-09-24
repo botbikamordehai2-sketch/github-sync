@@ -269,6 +269,6 @@ The workflow-static-data duplicate check is not atomic across concurrent executi
 
 The workflow intentionally remains `active: false`.
 
-Before activation, configure real webhook authentication and freshness validation. The current JSON must not be exposed publicly as a live endpoint until the authentication gate is configured and tested.
+The bundled Webhook node selects n8n Header Auth for both test and production URLs, but this public JSON contains no credential or shared secret. Before any test or activation, create and attach an n8n Header Auth credential privately, agree the header name and value with the approved sender, and verify that requests without the header or with an incorrect value are rejected. The Normalize node also requires the request envelope's timestamp to be within five minutes of server time and limits the declared `source` to `chatgpt` and `actor` to `moti`. These envelope fields are checked after Header Auth; they are not a substitute for authentication. Confirm the caller identity, validate both webhook URLs, and run acceptance tests in n8n before deployment. This repository change does not supply credentials, import the workflow, or activate it.
 
 Because the target repository is public, the first R0 GitHub handler uses unauthenticated public GitHub REST reads. A GitHub credential should only be added later if private-repository access or higher API limits are required.
