@@ -163,10 +163,10 @@ Failure of any required gate blocks advancement.
 
 ## 12. Relationship to Trinity Slack Gateway
 
-The existing Trinity Slack Gateway is a proposed request-routing layer
-between Slack, Vercel, and Make. Transport confidentiality and end-to-end
-security have not been verified. It is not the multi-agent research system
-described here.
+The existing Trinity Slack Gateway code validates Slack signatures and request
+timestamps and signs delivery to Make, as recorded in the evidence table below.
+Transport confidentiality and end-to-end delivery have not been verified.
+It is not the multi-agent research system described here.
 
 Any future connection between the gateway and research agents requires a
 separate specification, threat review, implementation plan, testing plan, cost
