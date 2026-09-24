@@ -58,7 +58,7 @@
 | Optimize Your Vercel Account: תרחיש "Saturday" + נושאי אבטחה/עלות (Deployment Protection, firewall, Bot Protection, Fluid Compute, Runtime Cache, ISR) | FACT | <https://vercel.com/academy/optimize-your-vercel-account> | No | אותה מגבלה |
 | Optimize Your Vercel Account: agent skill `vercel-optimize` | FACT | <https://vercel.com/academy/optimize-your-vercel-account> | No | אותה מגבלה; פרטי ההתקנה עצמם **UNSUPPORTED** |
 | Workflow Foundations: 4 חטיבות (First Workflow / Multi-Step / Waiting for Real World / When Things Go Wrong) | FACT | <https://vercel.com/academy/workflow-foundations> | No | אותה מגבלה |
-| Slack Agents on Vercel: 3 חטיבות, 6–10 שעות, Bolt+Nitro+AI SDK | FACT | <https://vercel.com/academy/slack-agents> | No | אותה מגבלה |
+| Slack Agents on Vercel: 4 תחומי למידה ו־6 יחידות קורס, כ־6–10 שעות, Bolt+Nitro+AI SDK | FACT | <https://vercel.com/academy/slack-agents> | No | אותה מגבלה |
 | Agent-Friendly APIs: קיים ככתובת רשמית, 3 חטיבות (Build API / Agent-Friendly Docs / Build the Skill) | FACT | <https://vercel.com/academy/agent-friendly-apis> | No | טרם נכתב קובץ סיכום ייעודי |
 | Creating a Software Factory: ~5 שעות, דורש היכרות בסיסית עם Git/GitHub/CLI | FACT | <https://vercel.com/academy/creating-a-software-factory> | No | טרם נכתב קובץ סיכום ייעודי |
 | Enterprise Apps and Agents: תרחיש "Vendor Review", דורש Node 24+, pnpm, חשבון GitHub+Vercel | FACT | <https://vercel.com/academy/enterprise-apps-agents> | No | טרם נכתב קובץ סיכום ייעודי |
