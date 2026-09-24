@@ -11,7 +11,7 @@
 ## מבנה התיקייה
 
 ```text
-docs/learning-hub/
+docs/bundle/learning-hub/
 ├── README.md                          — מסמך זה
 ├── COURSE_INDEX.md                    — טבלת כל הקורסים, סטטוס, קישור רשמי
 ├── LEARNING_PLAN.md                   — סדר לימוד מומלץ ותלות בין קורסים
