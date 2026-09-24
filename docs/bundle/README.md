@@ -12,4 +12,4 @@
 | architecture/GITHUB_PROJECT_AGENT_REFERENCE.md | PR #7 |
 | architecture/CHATGPT_N8N_BRIDGE_V1.md ו-n8n/ | PR #8 |
 
-ה־workflow ב־n8n נשאר כבוי (`active: false`). אין סודות. אין מיזוג עד אישור.
+קובץ ה־workflow המצורף מוגדר `active: false`; מצב n8n Cloud לא אומת כאן. אין סודות בקבצים שנבדקו. אין מיזוג עד אישור.
