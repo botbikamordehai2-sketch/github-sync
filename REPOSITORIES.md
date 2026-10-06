@@ -1,5 +1,7 @@
 # REPOSITORIES — מיפוי כל הריפואים באקוסיסטם
 
+> עדכון 06.10.2026: הטבלה למטה נכתבה ב‑13.09.2026 ואינה רשימת הריפו. רשימת השמות שנבדקה בגיטהאב באותו יום היא [status/REPO_INDEX.md](status/REPO_INDEX.md). אין בה תפקידים. `STATUS.md` ו‑`PROJECT_INDEX.md` לא שוכתבו כאן, כדי לא להמציא להם תפקיד.
+
 **Owner:** Mordehai Botbika  
 **Status:** Private · Internal Use  
 **Last Update:** 13.09.2026

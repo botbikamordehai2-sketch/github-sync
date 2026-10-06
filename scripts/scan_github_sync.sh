@@ -24,6 +24,7 @@ required=(
   "docs/architecture.md" "docs/sync-contract-template.md"
   "agents/README.md" "apps/README.md" "connectors/README.md"
   "mappings/README.md" "models/README.md" "tests/README.md" "workflows/README.md"
+  "status/REPO_INDEX.md" "status/repo-names.txt"
 )
 for f in "${required[@]}"; do
   if [ ! -e "$f" ]; then
@@ -40,6 +41,24 @@ echo "### STATUS.md project table sanity check"
 # something this scan does on its own.
 if ! grep -qi "memory-for-all" STATUS.md PROJECT_INDEX.md 2>/dev/null; then
   echo "ℹ️  NOTE: 'memory-for-all' is not yet listed in STATUS.md / PROJECT_INDEX.md (informational only, not a failure)"
+fi
+echo
+
+echo "### Repo index coverage"
+if [ ! -f status/repo-names.txt ] || [ ! -f status/REPO_INDEX.md ]; then
+  echo "❌ MISSING: status/repo-names.txt or status/REPO_INDEX.md"
+  FAIL=1
+else
+  while IFS= read -r name || [ -n "$name" ]; do
+    [ -z "$name" ] && continue
+    if ! grep -Fq "| ${name} |" status/REPO_INDEX.md; then
+      echo "❌ NO INDEX ROW: $name"
+      FAIL=1
+    fi
+  done < status/repo-names.txt
+  if [ "$FAIL" -eq 0 ]; then
+    echo "✅ every name in status/repo-names.txt has a row in status/REPO_INDEX.md"
+  fi
 fi
 echo
 
